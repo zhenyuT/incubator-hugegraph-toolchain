@@ -28,6 +28,7 @@ import org.apache.hugegraph.driver.SchemaManager;
 
 public class BatchExample {
 
+
     public static void main(String[] args) {
         // If connect failed will throw an exception.
         HugeClient hugeClient = HugeClient.builder("http://localhost:8080",
