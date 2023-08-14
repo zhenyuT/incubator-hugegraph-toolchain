@@ -1,6 +1,8 @@
 name: "hugegraph-client-ci"
 
 on:
+  on:
+    workflow_dispatch:
   push:
     branches:
       - master
