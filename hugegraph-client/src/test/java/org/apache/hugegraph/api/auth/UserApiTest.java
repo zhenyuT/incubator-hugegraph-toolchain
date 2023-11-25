@@ -163,12 +163,15 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertEquals("test1", user1.name());
         Assert.assertEquals("test2", user2.name());
         System.out.println(user3.id());
+        UserRole role3 = api.getUserRole(user3.id());
+        System.out.println(role3.toString());
+
         Assert.assertEquals("test3&", String.valueOf(user3.id()));
         Assert.assertEquals("test4 test", String.valueOf(user4.id()));
 
         UserRole role1 = api.getUserRole(user1.id());
         UserRole role2 = api.getUserRole(user2.id());
-        UserRole role3 = api.getUserRole(user3.id());
+        //UserRole role3 = api.getUserRole(user3.id());
         UserRole role4 = api.getUserRole(user4.id());
 
         Assert.assertEquals("{\"roles\":{}}", role1.toString());
