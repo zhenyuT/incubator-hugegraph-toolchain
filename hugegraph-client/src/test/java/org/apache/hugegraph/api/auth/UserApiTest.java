@@ -157,18 +157,18 @@ public class UserApiTest extends AuthApiTest {
     public void testGetUserRole() {
         User user1 = createUser("test1", "psw1");
         User user2 = createUser("test2", "psw2");
-        User user3 = createUser("test3&", "psw3");
-        User user4 = createUser("test4 test", "psw4");
+        User user3 = createUser("test3&", "test3&", "psw3");
+        User user4 = createUser("test4 test", "test4 test", "psw4");
 
         Assert.assertEquals("test1", user1.name());
         Assert.assertEquals("test2", user2.name());
-        Assert.assertEquals("test3&", user3.name());
-        Assert.assertEquals("test4 test", user4.name());
+        Assert.assertEquals("test3&", user3.id());
+        Assert.assertEquals("test4 test", user4.id());
 
         UserRole role1 = api.getUserRole(user1.id());
         UserRole role2 = api.getUserRole(user2.id());
-        UserRole role3 = api.getUserRole(user2.id());
-        UserRole role4 = api.getUserRole(user2.id());
+        UserRole role3 = api.getUserRole(user3.id());
+        UserRole role4 = api.getUserRole(user4.id());
 
         Assert.assertEquals("{\"roles\":{}}", role1.toString());
         Assert.assertEquals("{\"roles\":{}}", role2.toString());
