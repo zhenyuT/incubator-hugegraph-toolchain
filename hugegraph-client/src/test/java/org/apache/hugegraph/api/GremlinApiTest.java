@@ -19,6 +19,7 @@ package org.apache.hugegraph.api;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 import org.apache.hugegraph.api.gremlin.GremlinRequest;
 import org.apache.hugegraph.exception.ServerException;
@@ -41,6 +42,22 @@ public class GremlinApiTest extends BaseApiTest {
         BaseApiTest.initPropertyKey();
         BaseApiTest.initVertexLabel();
         BaseApiTest.initEdgeLabel();
+    }
+
+    private static void assertThrows(Class<? extends Throwable> expectedThrowable,
+                                     Assert.ThrowableRunnable runnable,
+                                     Consumer<Throwable> exceptionConsumer) {
+        try {
+            runnable.run();
+            Assert.fail(String.format("No exception was thrown(expected %s)",
+                                      expectedThrowable.getName()));
+        } catch (Throwable e) {
+            if (!expectedThrowable.isInstance(e)) {
+                Assert.fail(String.format("Bad exception type %s(expected %s)",
+                                          e.getClass().getName(), expectedThrowable.getName()));
+            }
+            exceptionConsumer.accept(e);
+        }
     }
 
     @Before
@@ -207,11 +224,25 @@ public class GremlinApiTest extends BaseApiTest {
     @Test
     public void testSecurityOperation() {
         GremlinRequest request = new GremlinRequest("System.exit(-1)");
-        Assert.assertThrows(ServerException.class, () -> {
+
+        assertThrows(ServerException.class, () -> {
             gremlin().execute(request);
         }, e -> {
             String msg = "Not allowed to call System.exit() via Gremlin";
             Assert.assertContains(msg, e.getMessage());
         });
+    }
+
+    @Test
+    public void testAssertEqualsWithError() {
+        Assert.assertThrows(AssertionError.class, () ->
+                assertThrows(AssertionError.class, () -> {
+                    Assert.assertEquals((byte) 1, "1");
+                }, e -> {
+                    Assert.assertContains("expected: java.lang.Byte",
+                                          e.getMessage());
+                    Assert.fail("test");
+                })
+        );
     }
 }
